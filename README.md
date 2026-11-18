@@ -1,4 +1,4 @@
-# 17. Complete Deployment Guide — Follow Along
+ Complete Deployment Guide — Follow Along
 
 This section explains how another developer can clone this repository and reproduce the deployment on their own computer.
 
