@@ -555,31 +555,43 @@ The final release should show:
 
 text
 v1.0.0
-Troubleshooting
-Problem	Cause and fix
-curl: (52) Empty reply from server on port 8080	NGINX listens on 8080 inside the container. Map the port with -p 8080:8080, not -p 8080:80.
-docker ps shows (health: starting)	Wait about 30 seconds and run docker ps again until it shows (healthy).
-Container name already in use	Remove the old container with docker rm -f <name> and run it again.
-fatal: repository not found or a wrong folder name when cloning	The repository name starts with a hyphen. Use the full URL https://github.com/MarvDev-Arch/-devops-intern-final.git and clone into a named folder as shown in Step 2.
-Nomad Docker driver is unhealthy ("Docker is configured with Linux containers; switch to Windows Containers")	Native Windows Nomad cannot run Linux containers. Run Nomad inside Ubuntu WSL2 with Docker Desktop WSL integration enabled.
-sudo: Sudo is disabled on this machine	The command was run in PowerShell. Run wsl first and use the Ubuntu prompt for Linux commands.
-Nomad API connection refused on port 4646	The agent is not running or was stopped. Start nomad agent -dev in its own terminal and leave it running.
-Nomad job shows 0 placed and a Consul constraint message	The job needs a Consul agent. Start consul agent -dev, wait about 30 seconds, then run nomad job status nginx-app.
-Nomad cannot pull the image from GHCR	A latest tag always pulls from the registry, and a private package needs authentication. Tag a local image and run the job with -var="image_tag=local" (Step 10, Option B).
-docker compose up fails because the name grafana is in use	Run docker rm -f grafana and start the stack again.
-Grafana Explore shows only the NGINX startup lines	Generate GET requests with curl, set the time range to Last 15 minutes, and rerun the query. Make sure the container was started after Promtail.
-Grafana cannot connect to Loki	Use http://loki:3100 as the data source URL, not localhost.
-Push rejected ("fetch first")	Run git pull --rebase, then push again.
-Known Limitations
-Nomad and Consul run as single-node development agents with no TLS and no ACLs. They are for local assessment only.
-Grafana, Loki and Promtail run locally with default credentials, no persistence and no authentication hardening.
-The Nomad host port is allocated dynamically, so commands that use a port must be adjusted to the value shown in the allocation.
-The Nomad job requires a local Consul agent and pulls its image from GHCR, so a private package or a missing Consul agent prevents placement.
-The Nomad Docker driver does not work on native Windows with Linux containers, so Nomad must run inside WSL2 or on Linux.
-Log ingestion depends on Promtail discovering the application container, so the application must be started after the monitoring stack.
-No server is left running after the review. The evidence for the CI run, the Nomad deployment and the Grafana query is the set of screenshots in docs/screenshots/.
-Deployment Summary
 
+## Troubleshooting
+
+- **`curl: (52) Empty reply from server` on port 8080**
+  - NGINX listens on 8080 inside the container.
+  - Map the port with `-p 8080:8080`, not `-p 8080:80`.
+- **`docker ps` shows `(health: starting)`**
+  - Wait about 30 seconds and run `docker ps` again until it shows `(healthy)`.
+- **Container name already in use**
+  - Remove the old container with `docker rm -f CONTAINER_NAME` and run it again.
+- **`fatal: repository not found` or a wrong folder name when cloning**
+  - The repository name starts with a hyphen.
+  - Use the full URL `https://github.com/MarvDev-Arch/-devops-intern-final.git` and clone into a named folder as shown in Step 2.
+- **Nomad Docker driver is unhealthy ("Docker is configured with Linux containers; switch to Windows Containers")**
+  - Native Windows Nomad cannot run Linux containers.
+  - Run Nomad inside Ubuntu WSL2 with Docker Desktop WSL integration enabled.
+- **`sudo: Sudo is disabled on this machine`**
+  - The command was run in PowerShell.
+  - Run `wsl` first and use the Ubuntu prompt for Linux commands.
+- **Nomad API connection refused on port 4646**
+  - The agent is not running or was stopped.
+  - Start `nomad agent -dev` in its own terminal and leave it running.
+- **Nomad job shows `0 placed` and a Consul constraint message**
+  - The job needs a Consul agent.
+  - Start `consul agent -dev`, wait about 30 seconds, then run `nomad job status nginx-app`.
+- **Nomad cannot pull the image from GHCR**
+  - A `latest` tag always pulls from the registry, and a private package needs authentication.
+  - Tag a local image and run the job with `-var="image_tag=local"` (Step 10, Option B).
+- **`docker compose up` fails because the name `grafana` is in use**
+  - Run `docker rm -f grafana` and start the stack again.
+- **Grafana Explore shows only the NGINX startup lines**
+  - Generate GET requests with `curl`, set the time range to Last 15 minutes, and rerun the query.
+  - Make sure the container was started after Promtail.
+- **Grafana cannot connect to Loki**
+  - Use `http://loki:3100` as the data source URL, not `localhost`.
+- **Push rejected ("fetch first")**
+  - Run `git pull --rebase`, then push again.
 At the end of this guide, another developer should be able to:
 
 Clone the GitHub repository.
