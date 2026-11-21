@@ -317,7 +317,7 @@ nomad job run nomad/nginx-app.nomad.hcl
 Option B - use your locally built image. Tag it with a non-latest tag and pass the tag to the job:
 
 bash
-docker tag devops-intern-app ghcr.io/marvdev-arch/devops-intern-final:local
+docker tag devops-intern-final:v1 ghcr.io/marvdev-arch/devops-intern-final:local ghcr.io/marvdev-arch/devops-intern-final:local
 nomad job run -var="image_tag=local" nomad/nginx-app.nomad.hcl
 
 Check its status (wait about 25 seconds first):
